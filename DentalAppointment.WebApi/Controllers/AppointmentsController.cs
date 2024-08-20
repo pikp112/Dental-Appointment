@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DentalAppointment.Core.Dtos;
+using DentalAppointment.Core.Models;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,17 @@ namespace DentalAppointment.WebApi.Controllers
 
             if (!TryValidateModel(appointmentDto))
                 return BadRequest(ModelState);
+
+            var existingAppoint = await unitOfWork.AppointmentRepository.GetAsync(appointmentDto.AppointmentDate);
+
+            if (existingAppoint != null)
+                return Conflict("Sorry but an appointment already exist.");
+
+            var entity = mapper.Map<AppointmentModel>(appointmentDto);
+
+            await unitOfWork.AppointmentRepository.AddAsync(entity);
+
+            return CreatedAtAction(nameof(CreateAppointment), new { Appointment = entity.AppointmentDate }, entity);
         }
     }
 }

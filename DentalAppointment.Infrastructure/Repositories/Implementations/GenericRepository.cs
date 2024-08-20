@@ -25,8 +25,8 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
             }
         }
 
-        public async Task<T> GetAsync(Guid id)
-            => await context.Set<T>().FindAsync(id);
+        public async Task<T> GetAsync(DateTime appointmentDate)
+            => await context.Set<T>().FindAsync(appointmentDate);
 
         public async Task UpdateAsync(Guid id, T Entity)
         {
