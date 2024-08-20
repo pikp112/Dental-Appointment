@@ -1,33 +1,22 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using DentalAppointment.Core.Dtos;
+using DentalAppointment.Infrastructure.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DentalAppointment.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AppointmentsController(IAppointmentService appointmentService) : ControllerBase
+    public class AppointmentsController(IUnitOfWork unitOfWork, IMapper mapper) : ControllerBase
     {
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetAppointment(int id)
-    {
-        var appointment = await appointmentService.GetAppointmentByIdAsync(id);
-        if (appointment == null)
+        [HttpPost]
+        public async Task<IActionResult> CreateAppointment([FromBody] AppointmentDto appointmentDto)
         {
-            return NotFound();
-        }
-        return Ok(appointment);
-    }
+            if (appointmentDto == null)
+                return BadRequest("No candidate data provided.");
 
-    [HttpPost]
-    public async Task<IActionResult> CreateAppointment(AppointmentDto appointmentDto)
-    {
-        var result = await appointmentService.CreateAppointmentAsync(appointmentDto);
-        if (!result.IsSuccess)
-        {
-            return BadRequest(result.ErrorMessage);
+            if (!TryValidateModel(appointmentDto))
+                return BadRequest(ModelState);
         }
-        return Ok(result.Appointment);
     }
 }

@@ -19,4 +19,10 @@
 		</PackageReference>
 		<PackageReference Include="Quickwire" Version="1.3.2" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Services\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\DentalAppointment.Core\DentalAppointment.Core.csproj" />
+	</ItemGroup>
 </Project>
