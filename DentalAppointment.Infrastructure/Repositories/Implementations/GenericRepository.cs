@@ -1,9 +1,12 @@
 ﻿using DentalAppointment.Core.Models;
 using DentalAppointment.Infrastructure.Data;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
+using Microsoft.Extensions.DependencyInjection;
+using Quickwire.Attributes;
 
 namespace DentalAppointment.Infrastructure.Repositories.Implementations
 {
+    [InjectAllInitOnlyProperties]
     public class GenericRepository<T>(ApplicationDbContext context) : IGenericRepository<T> where T : BaseModel
     {
         public async Task AddAsync(T Entity)
@@ -25,8 +28,8 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
             }
         }
 
-        public async Task<T> GetAsync(DateTime appointmentDate)
-            => await context.Set<T>().FindAsync(appointmentDate);
+        public async Task<T> GetAsync(Guid id)
+            => await context.Set<T>().FindAsync(id);
 
         public async Task UpdateAsync(Guid id, T Entity)
         {

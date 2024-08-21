@@ -1,19 +1,32 @@
 ﻿using DentalAppointment.Core.Enums;
+using DentalAppointment.Core.Validations;
 using System.ComponentModel.DataAnnotations;
 
 namespace DentalAppointment.Core.Models
 {
     public record AppointmentModel : BaseModel
     {
+        [FutureDate(1)]
         public required DateTime AppointmentDate { get; init; }
         [StringLength(200, MinimumLength = 2)]
         public required string PatientName { get; init; }
         [Phone]
         [StringLength(14, MinimumLength = 10)]
         public required string PatientPhoneNumber { get; init; }
-        public TreatmentType TreatmentType { get; init; } = TreatmentType.Consultation;
-        public TimeSpan Duration => GetDurationByTreatment(TreatmentType);
-
+        private TreatmentType _treatmentType = TreatmentType.Consultation;
+        public TreatmentType TreatmentType
+        {
+            get => _treatmentType;
+            init
+            {
+                _treatmentType = value;
+                Duration = GetDurationByTreatment(value);
+            }
+        }
+        public TimeSpan Duration { get; private set; }
+        public bool IsConfirmed { get; init; } = false;
+        [StringLength(1000)]
+        public string? Notes { get; init; } = string.Empty;
         private static TimeSpan GetDurationByTreatment(TreatmentType treatmentType)
         {
             return treatmentType switch
@@ -29,8 +42,5 @@ namespace DentalAppointment.Core.Models
                 _ => TimeSpan.FromMinutes(30)
             };
         }
-        public bool IsConfirmed { get; init; } = false;
-        [StringLength(1000)]
-        public string? Notes { get; init; } = string.Empty;
     }
 }

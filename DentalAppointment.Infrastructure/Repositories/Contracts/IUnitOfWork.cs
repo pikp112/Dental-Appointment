@@ -1,6 +1,6 @@
 ﻿namespace DentalAppointment.Infrastructure.Repositories.Contracts
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IAsyncDisposable
     {
         IAppointmentRepository AppointmentRepository { get; }
 

@@ -4,7 +4,7 @@ namespace DentalAppointment.Infrastructure.Repositories.Contracts
 {
     public interface IGenericRepository<T> where T : BaseModel
     {
-        Task<T> GetAsync(DateTime appointmentDate);
+        Task<T> GetAsync(Guid id);
 
         Task AddAsync(T Entity);
 

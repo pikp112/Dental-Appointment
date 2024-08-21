@@ -11,11 +11,16 @@ namespace DentalAppointment.Infrastructure.Data
         {
             modelBuilder.Entity<AppointmentModel>(entity =>
             {
-                entity.Property(e => e.TreatmentType)
-                    .HasConversion<string>();
+                entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Duration)
-                   .IsRequired();
+                entity.Property(e => e.TreatmentType)
+                      .HasConversion<string>();
+
+                entity.Property(e => e.IsConfirmed)
+                      .IsRequired();
+
+                entity.Property(e => e.Notes)
+                      .HasMaxLength(1000);
             });
             base.OnModelCreating(modelBuilder);
         }
