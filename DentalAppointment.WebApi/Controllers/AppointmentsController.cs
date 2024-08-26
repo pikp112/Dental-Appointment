@@ -64,6 +64,20 @@ namespace DentalAppointment.WebApi.Controllers
         }
 
         [MapToApiVersion("1.0")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllAppointments()
+        {
+            var appointments = await unitOfWork.AppointmentRepository.GetAll();
+
+            if (appointments == null || !appointments.Any())
+                return NotFound("No appointments found.");
+
+            var appointmentsDto = mapper.Map<IEnumerable<AppointmentDto>>(appointments);
+
+            return Ok(appointmentsDto);
+        }
+
+        [MapToApiVersion("1.0")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAppointment(Guid id, [FromBody] AppointmentDto appointmentDto)
         {

@@ -9,9 +9,18 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
     [InjectAllInitOnlyProperties]
     public class AppointmentRepository(ApplicationDbContext applicationDbContext) : GenericRepository<AppointmentModel>(applicationDbContext), IAppointmentRepository
     {
+        public async Task<IReadOnlyCollection<AppointmentModel>> GetAll()
+        {
+            return await applicationDbContext.Appointments
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<AppointmentModel?> GetByDateAsync(DateTime appointmentDate)
         {
-            return await applicationDbContext.Appointments.FirstOrDefaultAsync(app => app.AppointmentDate == appointmentDate);
+            return await applicationDbContext.Appointments
+                .AsNoTracking()
+                .FirstOrDefaultAsync(app => app.AppointmentDate == appointmentDate);
         }
     }
 }

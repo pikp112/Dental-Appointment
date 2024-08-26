@@ -5,5 +5,7 @@ namespace DentalAppointment.Infrastructure.Repositories.Contracts
     public interface IAppointmentRepository : IGenericRepository<AppointmentModel>
     {
         Task<AppointmentModel?> GetByDateAsync(DateTime appointmentDate);
+
+        Task<IReadOnlyCollection<AppointmentModel>> GetAll();
     }
 }
