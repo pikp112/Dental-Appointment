@@ -2,6 +2,7 @@
 using DentalAppointment.Commands.Commands;
 using DentalAppointment.Core.Queries;
 using DentalAppointment.Queries.Queries;
+using DentalAppointment.Queries.Validations;
 using DentalAppointment.Query.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,12 @@ namespace DentalAppointment.WebApi.Controllers
         {
             var query = new GetAppointmentByDateTimeQuery(appointmentDate);
 
+            var validator = new GetAppointmentByDateTimeQueryValidator();
+            var validationResult = validator.Validate(query);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
+
             var result = await mediator.Send(query);
 
             return result != null ? Ok(result) : NotFound("Appointment not found.");
@@ -38,6 +45,12 @@ namespace DentalAppointment.WebApi.Controllers
         public async Task<IActionResult> GetAppointmentById(Guid id)
         {
             var query = new GetAppointmentByIdQuery(id);
+
+            var validator = new GetAppointmentByIdQueryValidator();
+            var validationResult = validator.Validate(query);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
 
             var result = await mediator.Send(query);
 

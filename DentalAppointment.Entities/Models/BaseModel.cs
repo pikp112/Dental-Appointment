@@ -7,7 +7,7 @@ namespace DentalAppointment.Core.Models
     {
         [Key]
         public Guid Id { get; init; } = Guid.NewGuid();
-        [FutureDate(1)]
+
         public required DateTime AppointmentDate { get; set; }
     }
 }

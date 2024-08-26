@@ -1,10 +1,14 @@
 using Asp.Versioning;
+using DentalAppointment.Commands.Commands;
 using DentalAppointment.Commands.Handlers;
 using DentalAppointment.Core.AutoMapper;
 using DentalAppointment.Core.Handlers;
+using DentalAppointment.Core.PipelineBehaviour;
 using DentalAppointment.Infrastructure.Data;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
 using DentalAppointment.Infrastructure.Repositories.Implementations;
+using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -54,7 +58,9 @@ builder.Services
         cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
         cfg.RegisterServicesFromAssembly(typeof(GetAllAppointmentsHandler).Assembly);
         cfg.RegisterServicesFromAssembly(typeof(CreateAppointmentHandler).Assembly);
-    });
+    })
+    .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
+    .AddValidatorsFromAssembly(typeof(CreateAppointmentCommandValidator).Assembly);
 
 var app = builder.Build();
 
