@@ -1,10 +1,13 @@
 using Asp.Versioning;
+using DentalAppointment.Commands.Handlers;
 using DentalAppointment.Core.AutoMapper;
+using DentalAppointment.Core.Handlers;
 using DentalAppointment.Infrastructure.Data;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
 using DentalAppointment.Infrastructure.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,7 +48,13 @@ builder.Services
     .AddTransient<IUnitOfWork, UnitOfWork>()
     .AddTransient<IAppointmentRepository, AppointmentRepository>()
     .AddAutoMapper(typeof(MappingAppointments))
-    .AddMemoryCache();
+    .AddMemoryCache()
+    .AddMediatR(cfg =>
+    {
+        cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        cfg.RegisterServicesFromAssembly(typeof(GetAllAppointmentsHandler).Assembly);
+        cfg.RegisterServicesFromAssembly(typeof(CreateAppointmentHandler).Assembly);
+    });
 
 var app = builder.Build();
 

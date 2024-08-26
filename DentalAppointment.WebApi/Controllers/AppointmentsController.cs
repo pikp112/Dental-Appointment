@@ -1,9 +1,9 @@
 ﻿using Asp.Versioning;
-using AutoMapper;
-using DentalAppointment.Core.Dtos;
-using DentalAppointment.Core.Models;
-using DentalAppointment.Infrastructure.Repositories.Contracts;
-using DentalAppointment.Infrastructure.Repositories.Implementations;
+using DentalAppointment.Commands.Commands;
+using DentalAppointment.Core.Queries;
+using DentalAppointment.Queries.Queries;
+using DentalAppointment.Query.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DentalAppointment.WebApi.Controllers
@@ -11,104 +11,64 @@ namespace DentalAppointment.WebApi.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class AppointmentsController(IUnitOfWork unitOfWork, IMapper mapper) : ControllerBase
+    public class AppointmentsController(IMediator mediator) : ControllerBase
     {
         [MapToApiVersion("1.0")]
         [HttpPost]
-        public async Task<IActionResult> CreateAppointment([FromBody] AppointmentDto appointmentDto)
+        public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentCommand appointmentCommand)
         {
-            if (appointmentDto == null)
-                return BadRequest("No candidate data provided.");
+            var result = await mediator.Send(appointmentCommand);
 
-            if (!TryValidateModel(appointmentDto))
-                return BadRequest(ModelState);
-
-            var existingAppoint = await unitOfWork.AppointmentRepository.GetByDateAsync(appointmentDto.AppointmentDate);
-
-            if (existingAppoint != null)
-                return Conflict("Sorry but an appointment already exist.");
-
-            var entity = mapper.Map<AppointmentModel>(appointmentDto);
-
-            await unitOfWork.AppointmentRepository.AddAsync(entity);
-
-            return CreatedAtAction(nameof(CreateAppointment), new { Appointment = entity.AppointmentDate }, entity);
+            return CreatedAtAction(nameof(CreateAppointment), new { Appointment = result.AppointmentDate }, result);
         }
 
         [MapToApiVersion("1.0")]
         [HttpGet("{appointmentDate}")]
         public async Task<IActionResult> GetAppointmentByDateTime(DateTime appointmentDate)
         {
-            var appointment = await unitOfWork.AppointmentRepository.GetByDateAsync(appointmentDate);
+            var query = new GetAppointmentByDateTimeQuery(appointmentDate);
 
-            if (appointment == null)
-                return NotFound("Appointment not found.");
+            var result = await mediator.Send(query);
 
-            var appointmentDto = mapper.Map<AppointmentDto>(appointment);
-
-            return Ok(appointmentDto);
+            return result != null ? Ok(result) : NotFound("Appointment not found.");
         }
 
         [MapToApiVersion("1.0")]
         [HttpGet("id/{id}")]
         public async Task<IActionResult> GetAppointmentById(Guid id)
         {
-            var appointment = await unitOfWork.AppointmentRepository.GetAsync(id);
+            var query = new GetAppointmentByIdQuery(id);
 
-            if (appointment == null)
-                return NotFound("Appointment not found.");
+            var result = await mediator.Send(query);
 
-            var appointmentDto = mapper.Map<AppointmentDto>(appointment);
-
-            return Ok(appointmentDto);
+            return result != null ? Ok(result) : NotFound("Appointment not found.");
         }
 
         [MapToApiVersion("1.0")]
         [HttpGet]
         public async Task<IActionResult> GetAllAppointments()
         {
-            var appointments = await unitOfWork.AppointmentRepository.GetAll();
+            var query = new GetAllAppointmentsQuery();
 
-            if (appointments == null || !appointments.Any())
-                return NotFound("No appointments found.");
+            var result = await mediator.Send(query);
 
-            var appointmentsDto = mapper.Map<IEnumerable<AppointmentDto>>(appointments);
-
-            return Ok(appointmentsDto);
+            return Ok(result);
         }
 
         [MapToApiVersion("1.0")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAppointment(Guid id, [FromBody] AppointmentDto appointmentDto)
+        [HttpPut]
+        public async Task<IActionResult> UpdateAppointment([FromBody] UpdateAppointmentCommand updateAppointmentCommand)
         {
-            if (appointmentDto == null)
-                return BadRequest("No candidate data provided.");
-
-            if (!TryValidateModel(appointmentDto))
-                return BadRequest(ModelState);
-
-            var existingAppointment = await unitOfWork.AppointmentRepository.GetAsync(id);
-
-            if (existingAppointment == null)
-                return NotFound("Appointment not found.");
-
-            mapper.Map(appointmentDto, existingAppointment);
-
-            await unitOfWork.AppointmentRepository.UpdateAsync(existingAppointment.Id, existingAppointment);
+            await mediator.Send(updateAppointmentCommand);
 
             return NoContent();
         }
 
         [MapToApiVersion("1.0")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAppointment(Guid id)
+        [HttpDelete("{appointmentDate}")]
+        public async Task<IActionResult> DeleteAppointment(DeleteAppointmentCommand deleteAppointmentDateTime)
         {
-            var existingAppointment = await unitOfWork.AppointmentRepository.GetAsync(id);
-
-            if (existingAppointment == null)
-                return NotFound("Appointment not found.");
-
-            await unitOfWork.AppointmentRepository.DeleteAsync(id);
+            await mediator.Send(deleteAppointmentDateTime);
 
             return NoContent();
         }

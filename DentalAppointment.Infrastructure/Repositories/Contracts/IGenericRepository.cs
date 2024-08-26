@@ -10,6 +10,6 @@ namespace DentalAppointment.Infrastructure.Repositories.Contracts
 
         Task DeleteAsync(Guid id);
 
-        Task UpdateAsync(Guid id, T Entity);
+        Task UpdateAsync(T Entity);
     }
 }

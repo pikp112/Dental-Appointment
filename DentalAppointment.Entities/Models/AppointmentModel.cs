@@ -6,27 +6,25 @@ namespace DentalAppointment.Core.Models
 {
     public record AppointmentModel : BaseModel
     {
-        [FutureDate(1)]
-        public required DateTime AppointmentDate { get; init; }
         [StringLength(200, MinimumLength = 2)]
-        public required string PatientName { get; init; }
+        public required string PatientName { get; set; }
         [Phone]
         [StringLength(14, MinimumLength = 10)]
-        public required string PatientPhoneNumber { get; init; }
+        public required string PatientPhoneNumber { get; set; }
         private TreatmentType _treatmentType = TreatmentType.Consultation;
         public TreatmentType TreatmentType
         {
             get => _treatmentType;
-            init
+            set
             {
                 _treatmentType = value;
                 Duration = GetDurationByTreatment(value);
             }
         }
         public TimeSpan Duration { get; private set; }
-        public bool IsConfirmed { get; init; } = false;
+        public bool IsConfirmed { get; set; } = false;
         [StringLength(1000)]
-        public string? Notes { get; init; } = string.Empty;
+        public string? Notes { get; set; } = string.Empty;
         private static TimeSpan GetDurationByTreatment(TreatmentType treatmentType)
         {
             return treatmentType switch

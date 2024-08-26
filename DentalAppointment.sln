@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalAppointment.WebApi", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalAppointment.Infrastructure", "DentalAppointment.Infrastructure\DentalAppointment.Infrastructure.csproj", "{0523B0BD-6EDB-4807-8296-118C4ED74E42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalAppointment.Query", "DentalAppointment.Query\DentalAppointment.Query.csproj", "{A6E4CBA5-F74A-49DC-8781-033A6CE9EE7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalAppointment.Queries", "DentalAppointment.Query\DentalAppointment.Queries.csproj", "{A6E4CBA5-F74A-49DC-8781-033A6CE9EE7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalAppointment.Commands", "DentalAppointment.Commands\DentalAppointment.Commands.csproj", "{978B914B-4D38-4BCD-B910-B75FD0C4430D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalAppointment.Entities", "DentalAppointment.Entities\DentalAppointment.Entities.csproj", "{670EF120-4829-4B05-94D0-4B8C731BB0F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{A6E4CBA5-F74A-49DC-8781-033A6CE9EE7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6E4CBA5-F74A-49DC-8781-033A6CE9EE7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6E4CBA5-F74A-49DC-8781-033A6CE9EE7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{978B914B-4D38-4BCD-B910-B75FD0C4430D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{978B914B-4D38-4BCD-B910-B75FD0C4430D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{978B914B-4D38-4BCD-B910-B75FD0C4430D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{978B914B-4D38-4BCD-B910-B75FD0C4430D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{670EF120-4829-4B05-94D0-4B8C731BB0F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{670EF120-4829-4B05-94D0-4B8C731BB0F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{670EF120-4829-4B05-94D0-4B8C731BB0F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{670EF120-4829-4B05-94D0-4B8C731BB0F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

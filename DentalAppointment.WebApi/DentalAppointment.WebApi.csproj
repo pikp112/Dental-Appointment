@@ -9,6 +9,7 @@
   <ItemGroup>
 	  <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
 	  <PackageReference Include="AutoMapper" Version="13.0.1" />
+	  <PackageReference Include="MediatR" Version="12.4.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
@@ -25,7 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DentalAppointment.Commands\DentalAppointment.Commands.csproj" />
     <ProjectReference Include="..\DentalAppointment.Infrastructure\DentalAppointment.Infrastructure.csproj" />
+    <ProjectReference Include="..\DentalAppointment.Query\DentalAppointment.Queries.csproj" />
   </ItemGroup>
 
 </Project>

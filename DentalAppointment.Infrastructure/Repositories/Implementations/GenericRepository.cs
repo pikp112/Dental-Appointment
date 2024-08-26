@@ -1,7 +1,7 @@
 ﻿using DentalAppointment.Core.Models;
 using DentalAppointment.Infrastructure.Data;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Quickwire.Attributes;
 
 namespace DentalAppointment.Infrastructure.Repositories.Implementations
@@ -13,6 +13,7 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
         {
             await context.Set<T>()
                     .AddAsync(Entity);
+
             await context.SaveChangesAsync();
         }
 
@@ -31,14 +32,11 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
         public async Task<T> GetAsync(Guid id)
             => await context.Set<T>().FindAsync(id);
 
-        public async Task UpdateAsync(Guid id, T Entity)
+        public async Task UpdateAsync(T Entity)
         {
-            var ex_entity = await context.Set<T>().FindAsync(id);
-            if (ex_entity != null)
-            {
-                context.Update(ex_entity);
-                await context.SaveChangesAsync();
-            }
+            var ex_entity = await context.Set<T>().FindAsync(Entity.AppointmentDate) ?? throw new InvalidOperationException($"Unable to find appointment from {Entity.AppointmentDate}");
+            context.Update(ex_entity);
+            await context.SaveChangesAsync();
         }
     }
 }
