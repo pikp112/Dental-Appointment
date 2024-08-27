@@ -2,8 +2,8 @@
 using DentalAppointment.Commands.Commands;
 using DentalAppointment.Core.Queries;
 using DentalAppointment.Queries.Queries;
-using DentalAppointment.Queries.Validations;
 using DentalAppointment.Query.Queries;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +12,9 @@ namespace DentalAppointment.WebApi.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class AppointmentsController(IMediator mediator) : ControllerBase
+    public class AppointmentsController(IMediator mediator,
+                                        IValidator<GetAppointmentByDateTimeQuery> dateTimeValidator,
+                                        IValidator<GetAppointmentByIdQuery> idValidator) : ControllerBase
     {
         [MapToApiVersion("1.0")]
         [HttpPost]
@@ -29,8 +31,7 @@ namespace DentalAppointment.WebApi.Controllers
         {
             var query = new GetAppointmentByDateTimeQuery(appointmentDate);
 
-            var validator = new GetAppointmentByDateTimeQueryValidator();
-            var validationResult = validator.Validate(query);
+            var validationResult = dateTimeValidator.Validate(query);
 
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
@@ -46,8 +47,7 @@ namespace DentalAppointment.WebApi.Controllers
         {
             var query = new GetAppointmentByIdQuery(id);
 
-            var validator = new GetAppointmentByIdQueryValidator();
-            var validationResult = validator.Validate(query);
+            var validationResult = idValidator.Validate(query);
 
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));

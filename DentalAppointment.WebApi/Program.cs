@@ -7,6 +7,7 @@ using DentalAppointment.Core.PipelineBehaviour;
 using DentalAppointment.Infrastructure.Data;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
 using DentalAppointment.Infrastructure.Repositories.Implementations;
+using DentalAppointment.Queries.Validations;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +61,9 @@ builder.Services
         cfg.RegisterServicesFromAssembly(typeof(CreateAppointmentHandler).Assembly);
     })
     .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
-    .AddValidatorsFromAssembly(typeof(CreateAppointmentCommandValidator).Assembly);
+    .AddValidatorsFromAssemblies(new List<Assembly>
+    { typeof(CreateAppointmentCommandValidator).Assembly,
+      typeof(GetAppointmentByDateTimeQueryValidator).Assembly});
 
 var app = builder.Build();
 
