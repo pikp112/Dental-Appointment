@@ -34,7 +34,7 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
 
         public async Task UpdateAsync(T Entity)
         {
-            var ex_entity = await context.Set<T>().FindAsync(Entity.AppointmentDate) ?? throw new InvalidOperationException($"Unable to find appointment from {Entity.AppointmentDate}");
+            var ex_entity = await context.Set<T>().FindAsync(Entity.AppointmentDateTime) ?? throw new InvalidOperationException($"Unable to find appointment from {Entity.AppointmentDateTime}");
             context.Update(ex_entity);
             await context.SaveChangesAsync();
         }

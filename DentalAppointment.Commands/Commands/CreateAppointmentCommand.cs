@@ -1,10 +1,11 @@
 ﻿using DentalAppointment.Core.Enums;
 using DentalAppointment.Core.Models;
+using DentalAppointment.Entities.Responses;
 using MediatR;
 
 namespace DentalAppointment.Commands.Commands
 {
-    public record CreateAppointmentCommand : BaseModel, IRequest<AppointmentModel>
+    public record CreateAppointmentCommand : BaseModel, IRequest<AppointmentResponse>
     {
         public required string PatientName { get; set; }
 

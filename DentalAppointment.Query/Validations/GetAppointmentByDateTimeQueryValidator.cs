@@ -21,7 +21,7 @@ namespace DentalAppointment.Queries.Validations
 
         private bool BeNotTooFarInPast(DateTime date)
         {
-            return date >= DateTime.Now.AddYears(2);
+            return date >= DateTime.Now.AddYears(-2);
         }
 
         private bool BeNotTooFarInFuture(DateTime date)

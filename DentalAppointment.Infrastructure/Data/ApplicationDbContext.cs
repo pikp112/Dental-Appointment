@@ -13,14 +13,23 @@ namespace DentalAppointment.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id);
 
+                entity.HasIndex(e => e.AppointmentDateTime)
+                      .IsUnique();
+
                 entity.Property(e => e.TreatmentType)
                       .HasConversion<string>();
 
                 entity.Property(e => e.IsConfirmed)
                       .IsRequired();
 
+                entity.HasIndex(e => e.PatientPhoneNumber)
+                      .IsUnique();
+
                 entity.Property(e => e.Notes)
                       .HasMaxLength(1000);
+
+                entity.HasIndex(e => new { e.AppointmentDateTime, e.PatientPhoneNumber })
+                      .IsUnique();
             });
             base.OnModelCreating(modelBuilder);
         }

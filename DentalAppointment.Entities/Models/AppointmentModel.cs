@@ -1,5 +1,4 @@
 ﻿using DentalAppointment.Core.Enums;
-using DentalAppointment.Core.Validations;
 using System.ComponentModel.DataAnnotations;
 
 namespace DentalAppointment.Core.Models

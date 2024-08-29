@@ -14,15 +14,12 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
     {
         public async Task<AppointmentModel> CreateAppointmentAsync(Guid appointmentId, DateTime appointmentDateTime, string patientName, string patientPhoneNumber, TreatmentType treatmentType, string notes)
         {
-            var existingAppointment = await applicationDbContext.Appointments.FirstOrDefaultAsync(x => x.AppointmentDate == appointmentDateTime);
-
-            if (existingAppointment != null)
-                throw new InvalidOperationException("Sorry but an appointment already exist.");
+            await CheckForOverlappingAppointmentsAsync(appointmentDateTime, null);
 
             var appointment = new AppointmentModel
             {
                 Id = appointmentId,
-                AppointmentDate = appointmentDateTime,
+                AppointmentDateTime = appointmentDateTime,
                 PatientName = patientName,
                 PatientPhoneNumber = patientPhoneNumber,
                 TreatmentType = treatmentType,
@@ -36,16 +33,31 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
             return appointment;
         }
 
-        public async Task<AppointmentModel> UpdateAppointmentAsync(DateTime actualAppointmentDateTime, DateTime? newAppointmentDateTime, string patientName, string patientPhoneNumber, TreatmentType treatmentType, string notes)
+        public async Task<AppointmentModel> UpdateAppointmentAsync(DateTime actualAppointmentDateTime, DateTime? newAppointmentDateTime, string? patientName, string? patientPhoneNumber, TreatmentType? treatmentType, string? notes, bool? isConfirmed)
         {
-            var existingAppointment = await applicationDbContext.Appointments.FirstOrDefaultAsync(x => x.AppointmentDate == actualAppointmentDateTime)
+            var existingAppointment = await applicationDbContext.Appointments
+                .FirstOrDefaultAsync(x => x.AppointmentDateTime == actualAppointmentDateTime)
                 ?? throw new InvalidOperationException($"Sorry an appointment at {actualAppointmentDateTime} doesn't exist.");
 
-            existingAppointment.AppointmentDate = newAppointmentDateTime ?? actualAppointmentDateTime;
-            existingAppointment.PatientName = patientName;
-            existingAppointment.PatientPhoneNumber = patientPhoneNumber;
-            existingAppointment.TreatmentType = treatmentType;
-            existingAppointment.Notes = notes;
+            await CheckForOverlappingAppointmentsAsync(newAppointmentDateTime ?? actualAppointmentDateTime, existingAppointment.Id);
+
+            if (newAppointmentDateTime.HasValue)
+                existingAppointment.AppointmentDateTime = (DateTime)newAppointmentDateTime;
+
+            if (!string.IsNullOrWhiteSpace(patientName))
+                existingAppointment.PatientName = patientName;
+
+            if (!string.IsNullOrWhiteSpace(patientPhoneNumber))
+                existingAppointment.PatientPhoneNumber = patientPhoneNumber;
+
+            if (treatmentType.HasValue)
+                existingAppointment.TreatmentType = treatmentType.Value;
+
+            if (!string.IsNullOrWhiteSpace(notes))
+                existingAppointment.Notes = notes;
+
+            if (isConfirmed.HasValue)
+                existingAppointment.IsConfirmed = isConfirmed.Value;
 
             applicationDbContext.Update(existingAppointment);
 
@@ -56,7 +68,7 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
 
         public async Task<AppointmentModel> DeleteAppointmentAsync(DateTime appointmentDateTime)
         {
-            var existingAppointment = await applicationDbContext.Appointments.FirstOrDefaultAsync(x => x.AppointmentDate == appointmentDateTime)
+            var existingAppointment = await applicationDbContext.Appointments.FirstOrDefaultAsync(x => x.AppointmentDateTime == appointmentDateTime)
                     ?? throw new InvalidOperationException($"Sorry an appointment at {appointmentDateTime} doesn't exist.");
 
             applicationDbContext.Remove(existingAppointment);
@@ -77,7 +89,21 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
         {
             return await applicationDbContext.Appointments
                 .AsNoTracking()
-                .FirstOrDefaultAsync(app => app.AppointmentDate == appointmentDate);
+                .FirstOrDefaultAsync(app => app.AppointmentDateTime == appointmentDate);
+        }
+
+        private async Task CheckForOverlappingAppointmentsAsync(DateTime appointmentDateTime, Guid? excludedAppointmentId)
+        {
+            var endTime = appointmentDateTime.Add(TimeSpan.FromMinutes(30));
+
+            var overlappingAppointments = await applicationDbContext.Appointments
+                .Where(a => a.Id != excludedAppointmentId
+                            && a.AppointmentDateTime < endTime
+                            && a.AppointmentDateTime.Add(TimeSpan.FromMinutes(30)) > appointmentDateTime)
+                .ToListAsync();
+
+            if (overlappingAppointments.Any())
+                throw new InvalidOperationException("The appointment overlaps with existing appointments.");
         }
     }
 }

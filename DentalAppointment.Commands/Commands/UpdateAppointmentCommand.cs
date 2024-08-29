@@ -6,14 +6,15 @@ namespace DentalAppointment.Commands.Commands
 {
     public class UpdateAppointmentCommand : IRequest<AppointmentModel>
     {
-        public DateTime ActualAppointmentDate { get; set; }
-        public DateTime? NewAppointmentDate { get; set; }
-        public string PatientName { get; set; }
+        public DateTime AppointmentDateTime { get; set; }
+        public DateTime? NewAppointmentDateTime { get; set; }
+        public string? PatientName { get; set; }
 
-        public string PatientPhoneNumber { get; set; }
+        public string? PatientPhoneNumber { get; set; }
+        public bool? IsConfirmed { get; set; }
 
-        public TreatmentType TreatmentType { get; set; } = TreatmentType.Consultation;
+        public TreatmentType? TreatmentType { get; set; }
 
-        public string? Notes { get; set; } = string.Empty;
+        public string? Notes { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace DentalAppointment.WebApi.Controllers
         {
             var result = await mediator.Send(appointmentCommand);
 
-            return CreatedAtAction(nameof(CreateAppointment), new { Appointment = result.AppointmentDate }, result);
+            return CreatedAtAction(nameof(CreateAppointment), new { Appointment = result.AppointmentDateTime }, result);
         }
 
         [MapToApiVersion("1.0")]
@@ -78,8 +78,8 @@ namespace DentalAppointment.WebApi.Controllers
         }
 
         [MapToApiVersion("1.0")]
-        [HttpDelete("{appointmentDate}")]
-        public async Task<IActionResult> DeleteAppointment(DeleteAppointmentCommand deleteAppointmentDateTime)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAppointment([FromBody] DeleteAppointmentCommand deleteAppointmentDateTime)
         {
             await mediator.Send(deleteAppointmentDateTime);
 

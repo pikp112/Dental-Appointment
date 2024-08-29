@@ -9,7 +9,7 @@ namespace DentalAppointment.Commands.Commands
             RuleFor(x => x.Id)
                 .NotEmpty();
 
-            RuleFor(x => x.AppointmentDate)
+            RuleFor(x => x.AppointmentDateTime)
                 .NotEmpty()
                 .Custom((appointmentDate, context) =>
                 {
@@ -19,7 +19,7 @@ namespace DentalAppointment.Commands.Commands
 
             RuleFor(x => x.PatientName)
                 .NotEmpty().WithMessage("Patient name is required.")
-                .Length(2, 100).WithMessage("Patient name must be between 2 and 100 characters.");
+                .Length(4, 100).WithMessage("Patient name must be between 4 and 100 characters.");
 
             RuleFor(x => x.PatientPhoneNumber)
                 .NotEmpty().WithMessage("Patient phone number is required.")
