@@ -1,11 +1,13 @@
 ﻿using Asp.Versioning;
 using DentalAppointment.Commands.Commands;
 using DentalAppointment.Core.Queries;
+using DentalAppointment.Entities.Responses;
 using DentalAppointment.Queries.Queries;
 using DentalAppointment.Query.Queries;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace DentalAppointment.WebApi.Controllers
 {
@@ -18,6 +20,8 @@ namespace DentalAppointment.WebApi.Controllers
     {
         [MapToApiVersion("1.0")]
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(AppointmentResponse), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentCommand appointmentCommand)
         {
             var result = await mediator.Send(appointmentCommand);
@@ -27,6 +31,9 @@ namespace DentalAppointment.WebApi.Controllers
 
         [MapToApiVersion("1.0")]
         [HttpGet("{appointmentDate}")]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(AppointmentResponse), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAppointmentByDateTime(DateTime appointmentDate)
         {
             var query = new GetAppointmentByDateTimeQuery(appointmentDate);
@@ -43,6 +50,9 @@ namespace DentalAppointment.WebApi.Controllers
 
         [MapToApiVersion("1.0")]
         [HttpGet("id/{id}")]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(AppointmentResponse), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAppointmentById(Guid id)
         {
             var query = new GetAppointmentByIdQuery(id);
@@ -59,6 +69,8 @@ namespace DentalAppointment.WebApi.Controllers
 
         [MapToApiVersion("1.0")]
         [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(IEnumerable<AppointmentResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllAppointments()
         {
             var query = new GetAllAppointmentsQuery();
@@ -70,6 +82,8 @@ namespace DentalAppointment.WebApi.Controllers
 
         [MapToApiVersion("1.0")]
         [HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> UpdateAppointment([FromBody] UpdateAppointmentCommand updateAppointmentCommand)
         {
             await mediator.Send(updateAppointmentCommand);
@@ -79,6 +93,8 @@ namespace DentalAppointment.WebApi.Controllers
 
         [MapToApiVersion("1.0")]
         [HttpDelete]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteAppointment([FromBody] DeleteAppointmentCommand deleteAppointmentDateTime)
         {
             await mediator.Send(deleteAppointmentDateTime);

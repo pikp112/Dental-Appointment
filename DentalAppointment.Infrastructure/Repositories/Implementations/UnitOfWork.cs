@@ -1,7 +1,5 @@
 ﻿using DentalAppointment.Infrastructure.Data;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Quickwire.Attributes;
 
 namespace DentalAppointment.Infrastructure.Repositories.Implementations

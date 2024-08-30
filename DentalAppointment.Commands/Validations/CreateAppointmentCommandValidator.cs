@@ -15,7 +15,7 @@ namespace DentalAppointment.Commands.Commands
                 {
                     if (appointmentDate < DateTime.UtcNow.AddHours(1))
                         context.AddFailure($"The appointment date must be at least 1 hour from now.");
-                }); ;
+                });
 
             RuleFor(x => x.PatientName)
                 .NotEmpty().WithMessage("Patient name is required.")

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DentalAppointment.Core.Dtos;
 using DentalAppointment.Core.Queries;
 using DentalAppointment.Entities.Responses;
 using DentalAppointment.Infrastructure.Repositories.Contracts;

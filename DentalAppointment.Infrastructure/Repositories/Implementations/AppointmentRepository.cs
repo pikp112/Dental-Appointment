@@ -1,11 +1,9 @@
-﻿using Azure.Core;
-using DentalAppointment.Core.Enums;
+﻿using DentalAppointment.Core.Enums;
 using DentalAppointment.Core.Models;
 using DentalAppointment.Infrastructure.Data;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Quickwire.Attributes;
-using System;
 
 namespace DentalAppointment.Infrastructure.Repositories.Implementations
 {

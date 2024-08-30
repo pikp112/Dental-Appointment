@@ -8,6 +8,7 @@ using DentalAppointment.Infrastructure.Data;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
 using DentalAppointment.Infrastructure.Repositories.Implementations;
 using DentalAppointment.Queries.Validations;
+using DentalAppointment.WebApi.Middlewares;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -35,10 +36,21 @@ builder.Services.AddControllers()
                 .AddNewtonsoftJson();
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dental Appointment WebAPI - V1", Version = "v1.0" });
 });
+
+builder.Services.AddCors(config =>
+{
+    config.AddDefaultPolicy(policy => policy
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+    );
+});
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 {
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -72,7 +84,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors();
+
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ValidationExceptionMiddleware>();
 
 app.UseAuthorization();
 
