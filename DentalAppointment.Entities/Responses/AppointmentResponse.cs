@@ -11,6 +11,7 @@ namespace DentalAppointment.Entities.Responses
         public required TreatmentType TreatmentType { get; init; }
         public required TimeSpan Duration { get; init; }
         public required bool IsConfirmed { get; init; }
+        public required bool IsRejected { get; init; }
         public required string Notes { get; init; }
     }
 }

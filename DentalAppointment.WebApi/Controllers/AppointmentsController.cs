@@ -2,6 +2,7 @@
 using DentalAppointment.Commands.Commands;
 using DentalAppointment.Core.Queries;
 using DentalAppointment.Entities.Responses;
+using DentalAppointment.Infrastructure.Repositories.Implementations;
 using DentalAppointment.Queries.Queries;
 using DentalAppointment.Query.Queries;
 using FluentValidation;
@@ -100,6 +101,47 @@ namespace DentalAppointment.WebApi.Controllers
             await mediator.Send(deleteAppointmentDateTime);
 
             return NoContent();
+        }
+
+        [MapToApiVersion("1.0")]
+        [HttpGet("confirm/{id}")]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ConfirmAppointment(Guid id, [FromQuery] bool confirm)
+        {
+            var query = new GetAppointmentByIdQuery(id);
+
+            var validationResult = idValidator.Validate(query);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
+
+            var appointment = await mediator.Send(query);
+
+            if (appointment == null)
+                return NotFound("Appointment not found.");
+
+            if (appointment.IsConfirmed && !appointment.IsRejected)
+               return Ok("This link has already been used and this appointment has already been confirmed. No further actions can be performed.");
+            else if (!appointment.IsConfirmed && appointment.IsRejected)
+                return Ok("This link has already been used and this appointment has already been rejected. No further actions can be performed.");
+
+            var updateAppointmentCommand = new UpdateAppointmentCommand
+            {
+                AppointmentDateTime = appointment.AppointmentDateTime,
+                NewAppointmentDateTime = null,
+                PatientName = appointment.PatientName,
+                PatientPhoneNumber = appointment.PatientPhoneNumber,
+                TreatmentType = appointment.TreatmentType,
+                Notes = appointment.Notes,
+                IsConfirmed = confirm,
+                IsRejected = !confirm
+            };
+
+            await mediator.Send(updateAppointmentCommand);
+
+            return Ok(confirm ? "Appointment confirmed successfully." : "Appointment rejected successfully.");
         }
     }
 }

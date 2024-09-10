@@ -14,7 +14,15 @@ namespace DentalAppointment.Commands.Commands
                 .Custom((appointmentDate, context) =>
                 {
                     if (appointmentDate < DateTime.UtcNow.AddHours(1))
-                        context.AddFailure($"The appointment date must be at least 1 hour from now.");
+                        context.AddFailure("The appointment date must be at least 1 hour from now.");
+
+                    var romaniaTime = TimeZoneInfo.ConvertTimeFromUtc(appointmentDate, TimeZoneInfo.FindSystemTimeZoneById("GTB Standard Time"));
+
+                    var startOfWorkDay = new TimeSpan(9, 0, 0);
+                    var endOfWorkDay = new TimeSpan(17, 30, 0);
+
+                    if (romaniaTime.TimeOfDay < startOfWorkDay || romaniaTime.TimeOfDay > endOfWorkDay)
+                        context.AddFailure($"The appointment time must be between 09:00 and 17:30.");
                 });
 
             RuleFor(x => x.PatientName)

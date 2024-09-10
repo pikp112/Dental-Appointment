@@ -12,6 +12,7 @@ namespace DentalAppointment.Commands.Commands
 
         public string? PatientPhoneNumber { get; set; }
         public bool? IsConfirmed { get; set; }
+        public bool? IsRejected { get; set; }
 
         public TreatmentType? TreatmentType { get; set; }
 

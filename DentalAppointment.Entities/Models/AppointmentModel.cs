@@ -22,6 +22,7 @@ namespace DentalAppointment.Core.Models
         }
         public TimeSpan Duration { get; private set; }
         public bool IsConfirmed { get; set; } = false;
+        public bool IsRejected { get; set; } = false;
         [StringLength(1000)]
         public string? Notes { get; set; } = string.Empty;
         private static TimeSpan GetDurationByTreatment(TreatmentType treatmentType)

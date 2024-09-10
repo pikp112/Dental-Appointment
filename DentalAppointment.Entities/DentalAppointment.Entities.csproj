@@ -24,8 +24,4 @@
     <PackageReference Include="Quickwire" Version="1.3.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\" />
-  </ItemGroup>
-
 </Project>

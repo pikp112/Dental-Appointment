@@ -22,6 +22,9 @@ namespace DentalAppointment.Infrastructure.Data
                 entity.Property(e => e.IsConfirmed)
                       .IsRequired();
 
+                entity.Property(e => e.IsRejected)
+                      .IsRequired();
+
                 entity.HasIndex(e => e.PatientPhoneNumber)
                       .IsUnique();
 

@@ -7,7 +7,7 @@ namespace DentalAppointment.Infrastructure.Repositories.Contracts
     {
         Task<AppointmentModel> CreateAppointmentAsync(Guid appointmentId, DateTime appointmentDateTime, string patientName, string patientPhoneNumber, TreatmentType treatmentType, string notes);
 
-        Task<AppointmentModel> UpdateAppointmentAsync(DateTime actualAppointmentDateTime, DateTime? newAppointmentDateTime, string? patientName, string? patientPhoneNumber, TreatmentType? treatmentType, string? notes, bool? isConfirmed);
+        Task<AppointmentModel> UpdateAppointmentAsync(DateTime actualAppointmentDateTime, DateTime? newAppointmentDateTime, string? patientName, string? patientPhoneNumber, TreatmentType? treatmentType, string? notes, bool? isConfirmed, bool? isRejected);
 
         Task<AppointmentModel> DeleteAppointmentAsync(DateTime appointmentDateTime);
 

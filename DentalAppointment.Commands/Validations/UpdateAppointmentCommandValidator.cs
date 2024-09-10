@@ -1,5 +1,6 @@
 ﻿using DentalAppointment.Commands.Commands;
 using FluentValidation;
+using System;
 
 namespace DentalAppointment.Commands.Validations
 {
@@ -9,12 +10,38 @@ namespace DentalAppointment.Commands.Validations
         {
             RuleFor(x => x.AppointmentDateTime)
                 .NotEmpty().WithMessage("The appointment date time is required.")
-                .Must(BeAtLeastOneHourInFuture).WithMessage("The appointment date time could be updated with at least one hour from now.");
+                .Custom((appointmentDate, context) =>
+                {
+                    if (appointmentDate < DateTime.UtcNow.AddHours(1))
+                        context.AddFailure("The appointment date must be at least 1 hour from now.");
+
+                    var romaniaTime = TimeZoneInfo.ConvertTimeFromUtc(appointmentDate, TimeZoneInfo.FindSystemTimeZoneById("GTB Standard Time"));
+
+                    var startOfWorkDay = new TimeSpan(9, 0, 0);
+                    var endOfWorkDay = new TimeSpan(17, 30, 0);
+
+                    if (romaniaTime.TimeOfDay < startOfWorkDay || romaniaTime.TimeOfDay > endOfWorkDay)
+                        context.AddFailure($"The appointment time must be between 09:00 and 17:30.");
+                });
 
             RuleFor(x => x.NewAppointmentDateTime)
-                .Must(date => date.HasValue && date.Value >= DateTime.Now.AddHours(1))
-                .When(x => x.NewAppointmentDateTime.HasValue)
-                .WithMessage("The new appointment date must be at least one hour from now.");
+                 .Custom((newAppointmentDate, context) =>
+                 {
+                     if (newAppointmentDate.HasValue)
+                     {
+                         if (newAppointmentDate.Value < DateTime.UtcNow.AddHours(1))
+                             context.AddFailure("The new appointment date must be at least 1 hour from now.");
+
+                         var romaniaTime = TimeZoneInfo.ConvertTimeFromUtc(newAppointmentDate.Value, TimeZoneInfo.FindSystemTimeZoneById("GTB Standard Time"));
+
+                         var startOfWorkDay = new TimeSpan(9, 0, 0);
+                         var endOfWorkDay = new TimeSpan(17, 30, 0);
+
+                         if (romaniaTime.TimeOfDay < startOfWorkDay || romaniaTime.TimeOfDay > endOfWorkDay)
+                             context.AddFailure("The new appointment time must be between 09:00 and 17:30.");
+                     }
+                 })
+                .When(x => x.NewAppointmentDateTime.HasValue);
 
             RuleFor(x => x.PatientName)
                 .NotEmpty().When(x => !string.IsNullOrWhiteSpace(x.PatientName)).WithMessage("The patient's name must be at least 4 characters long.")
@@ -22,7 +49,7 @@ namespace DentalAppointment.Commands.Validations
 
             RuleFor(x => x.PatientPhoneNumber)
                 .Matches(@"^\+?\d{10,14}$").When(x => !string.IsNullOrWhiteSpace(x.PatientPhoneNumber))
-                .WithMessage("The patient's phone number must be a valid number with 10 to 14 numbers.");
+                .WithMessage("The patient's phone number must be a valid number with 10 to 14 digits.");
 
             RuleFor(x => x.TreatmentType)
                 .IsInEnum().When(x => x.TreatmentType.HasValue)
@@ -30,11 +57,6 @@ namespace DentalAppointment.Commands.Validations
 
             RuleFor(x => x.IsConfirmed)
                .NotNull().When(x => x.Notes != null).WithMessage("Confirmation status must be specified.");
-        }
-
-        private bool BeAtLeastOneHourInFuture(DateTime date)
-        {
-            return date >= DateTime.Now.AddHours(1);
         }
     }
 }

@@ -7,6 +7,8 @@ using DentalAppointment.Core.PipelineBehaviour;
 using DentalAppointment.Infrastructure.Data;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
 using DentalAppointment.Infrastructure.Repositories.Implementations;
+using DentalAppointment.Infrastructure.Services.Contracts;
+using DentalAppointment.Infrastructure.Services.Implementations;
 using DentalAppointment.Queries.Validations;
 using DentalAppointment.WebApi.Middlewares;
 using FluentValidation;
@@ -62,6 +64,7 @@ builder.Services
     .AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>))
     .AddTransient<IUnitOfWork, UnitOfWork>()
     .AddTransient<IAppointmentRepository, AppointmentRepository>()
+    .AddScoped<IEmailService, EmailService>()
     .AddAutoMapper(typeof(MappingAppointments))
     .AddMemoryCache()
     .AddMediatR(cfg =>

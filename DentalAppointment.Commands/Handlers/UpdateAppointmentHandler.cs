@@ -10,7 +10,7 @@ namespace DentalAppointment.Commands.Handlers
     {
         public async Task<AppointmentModel> Handle(UpdateAppointmentCommand request, CancellationToken cancellationToken)
         {
-            var appointment = await unitOfWork.AppointmentRepository.UpdateAppointmentAsync(request.AppointmentDateTime, request.NewAppointmentDateTime, request.PatientName, request.PatientPhoneNumber, request.TreatmentType, request.Notes, request.IsConfirmed);
+            var appointment = await unitOfWork.AppointmentRepository.UpdateAppointmentAsync(request.AppointmentDateTime, request.NewAppointmentDateTime, request.PatientName, request.PatientPhoneNumber, request.TreatmentType, request.Notes, request.IsConfirmed, request.IsRejected);
 
             return mapper.Map<AppointmentModel>(appointment);
         }

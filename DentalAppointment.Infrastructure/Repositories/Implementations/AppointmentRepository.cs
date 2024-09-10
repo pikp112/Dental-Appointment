@@ -1,14 +1,18 @@
 ﻿using DentalAppointment.Core.Enums;
 using DentalAppointment.Core.Models;
+using DentalAppointment.Entities.Dtos;
 using DentalAppointment.Infrastructure.Data;
 using DentalAppointment.Infrastructure.Repositories.Contracts;
+using DentalAppointment.Infrastructure.Services.Contracts;
+using DentalAppointment.Infrastructure.Templates;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Quickwire.Attributes;
 
 namespace DentalAppointment.Infrastructure.Repositories.Implementations
 {
     [InjectAllInitOnlyProperties]
-    public class AppointmentRepository(ApplicationDbContext applicationDbContext) : GenericRepository<AppointmentModel>(applicationDbContext), IAppointmentRepository
+    public class AppointmentRepository(ApplicationDbContext applicationDbContext, IConfiguration configuration, IEmailService emailService) : GenericRepository<AppointmentModel>(applicationDbContext), IAppointmentRepository
     {
         public async Task<AppointmentModel> CreateAppointmentAsync(Guid appointmentId, DateTime appointmentDateTime, string patientName, string patientPhoneNumber, TreatmentType treatmentType, string notes)
         {
@@ -28,10 +32,12 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
 
             await applicationDbContext.SaveChangesAsync();
 
+            await SendConfirmationEmailToAdminAsync(appointment, "create");
+
             return appointment;
         }
 
-        public async Task<AppointmentModel> UpdateAppointmentAsync(DateTime actualAppointmentDateTime, DateTime? newAppointmentDateTime, string? patientName, string? patientPhoneNumber, TreatmentType? treatmentType, string? notes, bool? isConfirmed)
+        public async Task<AppointmentModel> UpdateAppointmentAsync(DateTime actualAppointmentDateTime, DateTime? newAppointmentDateTime, string? patientName, string? patientPhoneNumber, TreatmentType? treatmentType, string? notes, bool? isConfirmed, bool? isRejected)
         {
             var existingAppointment = await applicationDbContext.Appointments
                 .FirstOrDefaultAsync(x => x.AppointmentDateTime == actualAppointmentDateTime)
@@ -56,6 +62,12 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
 
             if (isConfirmed.HasValue)
                 existingAppointment.IsConfirmed = isConfirmed.Value;
+
+            if (isRejected.HasValue)
+                existingAppointment.IsRejected = isRejected.Value;
+
+            if (existingAppointment.IsConfirmed! && existingAppointment.IsRejected!)
+                await SendConfirmationEmailToAdminAsync(existingAppointment, "update");
 
             applicationDbContext.Update(existingAppointment);
 
@@ -92,16 +104,46 @@ namespace DentalAppointment.Infrastructure.Repositories.Implementations
 
         private async Task CheckForOverlappingAppointmentsAsync(DateTime appointmentDateTime, Guid? excludedAppointmentId)
         {
-            var endTime = appointmentDateTime.Add(TimeSpan.FromMinutes(30));
-
             var overlappingAppointments = await applicationDbContext.Appointments
                 .Where(a => a.Id != excludedAppointmentId
-                            && a.AppointmentDateTime < endTime
-                            && a.AppointmentDateTime.Add(TimeSpan.FromMinutes(30)) > appointmentDateTime)
+                            && a.AppointmentDateTime < appointmentDateTime.AddMinutes(30)
+                            && a.AppointmentDateTime.AddMinutes(30) > appointmentDateTime)
                 .ToListAsync();
 
             if (overlappingAppointments.Any())
                 throw new InvalidOperationException("The appointment overlaps with existing appointments.");
+        }
+
+        private async Task SendConfirmationEmailToAdminAsync(AppointmentModel appointment, string actionType, DateTime? oldAppointmentDateTime = null)
+        {
+            var domain = configuration.GetValue<string>("Domain");
+
+            var confirmationLink = $"{domain}/api/v1/Appointments/confirm/{appointment.Id}?confirm=true";
+            var rejectionLink = $"{domain}/api/v1/Appointments/confirm/{appointment.Id}?confirm=false";
+
+            var emailContent = actionType == "create"
+                ? EmailTemplates.GetAppointmentCreationTemplate()
+                : actionType == "update"
+                ? EmailTemplates.GetAppointmentUpdateTemplate()
+                : throw new ArgumentException("Invalid action type for email template");
+
+            emailContent = emailContent.Replace("{{appointmentDateTime}}", appointment.AppointmentDateTime.ToString());
+            emailContent = emailContent.Replace("{{patientName}}", appointment.PatientName);
+            emailContent = emailContent.Replace("{{patientPhoneNumber}}", appointment.PatientPhoneNumber);
+            emailContent = emailContent.Replace("{{confirmationLink}}", confirmationLink);
+            emailContent = emailContent.Replace("{{rejectionLink}}", rejectionLink);
+
+            if (actionType == "update" && oldAppointmentDateTime.HasValue)
+                emailContent = emailContent.Replace("{{oldAppointmentDateTime}}", oldAppointmentDateTime.Value.ToString());
+
+            var emailDto = new EmailDto
+            {
+                To = configuration.GetValue<string>("EmailUserName") ?? throw new ArgumentNullException("Admin email is null."),
+                Subject = actionType == "create" ? "New Appointment Confirmation Request" : "Updated Appointment Confirmation Request",
+                Body = emailContent
+            };
+
+            await emailService.SendEmailAsync(emailDto);
         }
     }
 }
