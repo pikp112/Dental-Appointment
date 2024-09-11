@@ -2,7 +2,7 @@
 using DentalAppointment.Commands.Commands;
 using DentalAppointment.Core.Queries;
 using DentalAppointment.Entities.Responses;
-using DentalAppointment.Infrastructure.Repositories.Implementations;
+using DentalAppointment.Infrastructure.Templates;
 using DentalAppointment.Queries.Queries;
 using DentalAppointment.Query.Queries;
 using FluentValidation;
@@ -123,9 +123,9 @@ namespace DentalAppointment.WebApi.Controllers
                 return NotFound("Appointment not found.");
 
             if (appointment.IsConfirmed && !appointment.IsRejected)
-               return Ok("This link has already been used and this appointment has already been confirmed. No further actions can be performed.");
+                return Content(EmailTemplates.GetAppointmentConfirmationTemplate(true, appointment.AppointmentDateTime), "text/html");
             else if (!appointment.IsConfirmed && appointment.IsRejected)
-                return Ok("This link has already been used and this appointment has already been rejected. No further actions can be performed.");
+                return Content(EmailTemplates.GetAppointmentConfirmationTemplate(false, appointment.AppointmentDateTime), "text/html");
 
             var updateAppointmentCommand = new UpdateAppointmentCommand
             {
@@ -141,7 +141,7 @@ namespace DentalAppointment.WebApi.Controllers
 
             await mediator.Send(updateAppointmentCommand);
 
-            return Ok(confirm ? "Appointment confirmed successfully." : "Appointment rejected successfully.");
+            return Content(EmailTemplates.GetAppointmentConfirmationTemplate(confirm, appointment.AppointmentDateTime), "text/html");
         }
     }
 }

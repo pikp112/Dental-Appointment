@@ -10,36 +10,13 @@ namespace DentalAppointment.Commands.Validations
         {
             RuleFor(x => x.AppointmentDateTime)
                 .NotEmpty().WithMessage("The appointment date time is required.")
-                .Custom((appointmentDate, context) =>
-                {
-                    if (appointmentDate < DateTime.UtcNow.AddHours(1))
-                        context.AddFailure("The appointment date must be at least 1 hour from now.");
-
-                    var romaniaTime = TimeZoneInfo.ConvertTimeFromUtc(appointmentDate, TimeZoneInfo.FindSystemTimeZoneById("GTB Standard Time"));
-
-                    var startOfWorkDay = new TimeSpan(9, 0, 0);
-                    var endOfWorkDay = new TimeSpan(17, 30, 0);
-
-                    if (romaniaTime.TimeOfDay < startOfWorkDay || romaniaTime.TimeOfDay > endOfWorkDay)
-                        context.AddFailure($"The appointment time must be between 09:00 and 17:30.");
-                });
+                .Custom(ValidateAppointmentDateTime);
 
             RuleFor(x => x.NewAppointmentDateTime)
                  .Custom((newAppointmentDate, context) =>
                  {
                      if (newAppointmentDate.HasValue)
-                     {
-                         if (newAppointmentDate.Value < DateTime.UtcNow.AddHours(1))
-                             context.AddFailure("The new appointment date must be at least 1 hour from now.");
-
-                         var romaniaTime = TimeZoneInfo.ConvertTimeFromUtc(newAppointmentDate.Value, TimeZoneInfo.FindSystemTimeZoneById("GTB Standard Time"));
-
-                         var startOfWorkDay = new TimeSpan(9, 0, 0);
-                         var endOfWorkDay = new TimeSpan(17, 30, 0);
-
-                         if (romaniaTime.TimeOfDay < startOfWorkDay || romaniaTime.TimeOfDay > endOfWorkDay)
-                             context.AddFailure("The new appointment time must be between 09:00 and 17:30.");
-                     }
+                         ValidateAppointmentDateTime(newAppointmentDate.Value, context);
                  })
                 .When(x => x.NewAppointmentDateTime.HasValue);
 
@@ -57,6 +34,23 @@ namespace DentalAppointment.Commands.Validations
 
             RuleFor(x => x.IsConfirmed)
                .NotNull().When(x => x.Notes != null).WithMessage("Confirmation status must be specified.");
+        }
+
+        private static void ValidateAppointmentDateTime(DateTime appointmentDate, ValidationContext<UpdateAppointmentCommand> context)
+        {
+            if (appointmentDate < DateTime.UtcNow.AddHours(1))
+                context.AddFailure("The appointment date must be at least 1 hour from now.");
+
+            var romaniaTime = TimeZoneInfo.ConvertTimeFromUtc(appointmentDate, TimeZoneInfo.FindSystemTimeZoneById("GTB Standard Time"));
+
+            var startOfWorkDay = new TimeSpan(9, 0, 0);
+            var endOfWorkDay = new TimeSpan(17, 30, 0);
+
+            if (romaniaTime.TimeOfDay < startOfWorkDay || romaniaTime.TimeOfDay > endOfWorkDay)
+                context.AddFailure($"The appointment time must be between 09:00 and 17:30.");
+
+            if (romaniaTime.DayOfWeek == DayOfWeek.Saturday || romaniaTime.DayOfWeek == DayOfWeek.Sunday)
+                context.AddFailure("Appointments can only be scheduled from Monday to Friday.");
         }
     }
 }

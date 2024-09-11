@@ -23,6 +23,9 @@ namespace DentalAppointment.Commands.Commands
 
                     if (romaniaTime.TimeOfDay < startOfWorkDay || romaniaTime.TimeOfDay > endOfWorkDay)
                         context.AddFailure($"The appointment time must be between 09:00 and 17:30.");
+
+                    if (romaniaTime.DayOfWeek == DayOfWeek.Saturday || romaniaTime.DayOfWeek == DayOfWeek.Sunday)
+                        context.AddFailure("Appointments can only be scheduled from Monday to Friday.");
                 });
 
             RuleFor(x => x.PatientName)
