@@ -1,2 +1,23 @@
-<button type="”button”" class="”btn" btn-primary”>Test Button</button>Step 7:
-Serve Your ApplicationRun your Angular application using the Angular CLI:
+<div>
+  <mat-toolbar color="primary">
+    <span>Appointment Manager</span>
+    <span class="spacer"></span>
+    <nav>
+      <a mat-button routerLink="/appointments" routerLinkActive="active"
+        >Appointment List</a
+      >
+      <a mat-button routerLink="/create-appointment" routerLinkActive="active"
+        >Create Appointment</a
+      >
+      <a mat-button routerLink="/manage-appointments" routerLinkActive="active"
+        >Manage Appointments</a
+      >
+    </nav>
+  </mat-toolbar>
+
+  <router-outlet></router-outlet>
+
+  <mat-toolbar color="accent" class="footer">
+    <span>© 2024 Appointment Manager. All rights reserved.</span>
+  </mat-toolbar>
+</div>

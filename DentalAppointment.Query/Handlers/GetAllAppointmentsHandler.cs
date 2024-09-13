@@ -13,7 +13,7 @@ namespace DentalAppointment.Core.Handlers
             var appointments = await unitOfWork.AppointmentRepository.GetAll();
 
             if (appointments == null || !appointments.Any())
-                throw new InvalidOperationException("No appointments found.");
+                return [];
 
             return mapper.Map<List<AppointmentResponse>>(appointments);
         }

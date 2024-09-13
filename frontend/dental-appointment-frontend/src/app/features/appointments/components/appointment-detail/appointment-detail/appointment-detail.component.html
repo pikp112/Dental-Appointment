@@ -1,0 +1,17 @@
+<h2>Appointment Details</h2>
+<div *ngIf="appointment">
+  <p><strong>ID:</strong> {{ appointment.id }}</p>
+  <p>
+    <strong>Date & Time:</strong>
+    {{ appointment.appointmentDateTime | date : "short" }}
+  </p>
+  <p><strong>Patient Name:</strong> {{ appointment.patientName }}</p>
+  <p><strong>Phone Number:</strong> {{ appointment.patientPhoneNumber }}</p>
+  <p><strong>Treatment Type:</strong> {{ appointment.treatmentType }}</p>
+  <p>
+    <strong>Status:</strong>
+    <span *ngIf="appointment.isConfirmed">Confirmed</span>
+    <span *ngIf="appointment.isRejected">Rejected</span>
+  </p>
+  <p><strong>Notes:</strong> {{ appointment.notes }}</p>
+</div>

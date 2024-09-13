@@ -8,3 +8,14 @@ export enum TreatmentType {
   Checkup = 'Checkup',
   Orthodontics = 'Orthodontics',
 }
+
+export const MapTreatmentType = [
+  TreatmentType.Consultation,
+  TreatmentType.Cleaning,
+  TreatmentType.Filling,
+  TreatmentType.Extraction,
+  TreatmentType.RootCanal,
+  TreatmentType.Whitening,
+  TreatmentType.Checkup,
+  TreatmentType.Orthodontics,
+] as const;

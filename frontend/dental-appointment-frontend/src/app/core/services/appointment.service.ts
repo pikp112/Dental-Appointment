@@ -23,26 +23,21 @@ export class AppointmentService {
   }
 
   getAppointmentByDateTime(dateTime: Date): Observable<Appointment> {
-    return this.http.get<Appointment>(
-      `${this.apiUrl}/appointments/${dateTime}`
-    );
+    return this.http.get<Appointment>(`${this.apiUrl}/${dateTime}`);
   }
 
   createAppointment(
     appointment: CreateAppointmentCommand
   ): Observable<Appointment> {
-    return this.http.post<Appointment>(
-      `${this.apiUrl}/appointments`,
-      appointment
-    );
+    return this.http.post<Appointment>(`${this.apiUrl}`, appointment);
   }
 
   updateAppointment(appointment: UpdateAppointmentCommand): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/appointments`, appointment);
+    return this.http.put<void>(`${this.apiUrl}`, appointment);
   }
 
   deleteAppointment(appointment: DeleteAppointmentCommand): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/appointments`, {
+    return this.http.delete<void>(`${this.apiUrl}`, {
       body: appointment,
     });
   }
