@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AppointmentListComponent } from './features/appointments/components/appointment-list/appointment-list/appointment-list.component';
 import { AppointmentDetailComponent } from './features/appointments/components/appointment-detail/appointment-detail/appointment-detail.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,17 +15,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-import { AppointmentManagemeentComponent } from './features/appointments/pages/appointment-management/appointment-managemeent/appointment-managemeent.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { AppointmentManagementComponent } from './features/appointments/pages/appointment-management/appointment-management.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
+import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AppointmentListComponent,
     AppointmentDetailComponent,
     AppointmentCreateComponent,
-    AppointmentManagemeentComponent,
+    AppointmentManagementComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +43,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatInputModule,
     MatTableModule,
     MatToolbarModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatDatetimepickerModule,
+    MatMomentDatetimeModule,
     MatButtonModule,
   ],
   providers: [AppointmentService, provideAnimationsAsync()],

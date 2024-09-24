@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Appointment } from '../../../../shared/models/appointment.model';
 import { ActivatedRoute } from '@angular/router';
 import { AppointmentService } from '../../../../../core/services/appointment.service';
+import { MapTreatmentType } from '../../../../shared/enums/treatment-type.enum';
 
 @Component({
   selector: 'app-appointment-detail',
@@ -22,5 +23,9 @@ export class AppointmentDetailComponent implements OnInit {
     } else {
       console.error('No id found in route');
     }
+  }
+
+  getTreatmentTypeName(treatmentTypeIndex: number): string {
+    return MapTreatmentType[treatmentTypeIndex];
   }
 }

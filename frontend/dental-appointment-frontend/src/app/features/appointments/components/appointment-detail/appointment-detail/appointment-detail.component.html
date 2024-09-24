@@ -7,7 +7,10 @@
   </p>
   <p><strong>Patient Name:</strong> {{ appointment.patientName }}</p>
   <p><strong>Phone Number:</strong> {{ appointment.patientPhoneNumber }}</p>
-  <p><strong>Treatment Type:</strong> {{ appointment.treatmentType }}</p>
+  <p>
+    <strong>Treatment Type:</strong>
+    {{ getTreatmentTypeName(appointment.treatmentType) }}
+  </p>
   <p>
     <strong>Status:</strong>
     <span *ngIf="appointment.isConfirmed">Confirmed</span>

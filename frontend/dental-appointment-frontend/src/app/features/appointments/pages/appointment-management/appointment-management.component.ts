@@ -1,16 +1,16 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Appointment } from '../../../../shared/models/appointment.model';
-import { AppointmentService } from '../../../../../core/services/appointment.service';
-import { MapTreatmentType } from '../../../../shared/enums/treatment-type.enum';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DeleteAppointmentCommand } from '../../../../shared/models/delete-appointment.command.model';
+import { AppointmentService } from '../../../../core/services/appointment.service';
+import { MapTreatmentType } from '../../../shared/enums/treatment-type.enum';
+import { Appointment } from '../../../shared/models/appointment.model';
+import { DeleteAppointmentCommand } from '../../../shared/models/delete-appointment.command.model';
 
 @Component({
-  selector: 'app-appointment-list',
-  templateUrl: './appointment-list.component.html',
-  styleUrls: ['./appointment-list.component.css'],
+  selector: 'app-appointment-management',
+  templateUrl: './appointment-management.component.html',
+  styleUrl: './appointment-management.component.css',
 })
-export class AppointmentListComponent implements OnInit {
+export class AppointmentManagementComponent implements OnInit {
   appointments: Appointment[] = [];
   private appointmentService = inject(AppointmentService);
   private snackBar = inject(MatSnackBar);

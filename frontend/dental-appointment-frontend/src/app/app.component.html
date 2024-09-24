@@ -1,11 +1,8 @@
 <div>
   <mat-toolbar color="primary">
-    <span>Appointment Manager</span>
+    <span>Appointments Manager</span>
     <span class="spacer"></span>
     <nav>
-      <a mat-button routerLink="/appointments" routerLinkActive="active"
-        >Appointment List</a
-      >
       <a mat-button routerLink="/create-appointment" routerLinkActive="active"
         >Create Appointment</a
       >
@@ -18,6 +15,9 @@
   <router-outlet></router-outlet>
 
   <mat-toolbar color="accent" class="footer">
-    <span>© 2024 Appointment Manager. All rights reserved.</span>
+    <span
+      >© {{ getCurrentYear() }} Appointments Manager. All rights reserved.</span
+    >
+    <span>Version: {{ getCurrentVersion() }}</span>
   </mat-toolbar>
 </div>
