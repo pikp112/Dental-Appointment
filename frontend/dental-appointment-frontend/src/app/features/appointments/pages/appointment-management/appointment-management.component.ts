@@ -40,6 +40,7 @@ export class AppointmentManagementComponent implements OnInit {
 
   deleteAppointment(appointmentDateTime: Date): void {
     const command: DeleteAppointmentCommand = { appointmentDateTime };
+    console.log(command);
 
     this.appointmentService.deleteAppointment(command).subscribe(
       () => {

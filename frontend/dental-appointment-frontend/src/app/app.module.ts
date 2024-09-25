@@ -3,13 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AppointmentDetailComponent } from './features/appointments/components/appointment-detail/appointment-detail/appointment-detail.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AppointmentService } from './core/services/appointment.service';
 import { HttpClientModule } from '@angular/common/http';
-import { AppointmentCreateComponent } from './features/appointments/components/appointment-create/appointment-create/appointment-create.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -21,6 +19,11 @@ import { AppointmentManagementComponent } from './features/appointments/pages/ap
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
 import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
+import { AppointmentDetailComponent } from './features/appointments/components/appointment-detail/appointment-detail.component';
+import { AppointmentCreateComponent } from './features/appointments/components/appointment-create/appointment-create.component';
+import { UpdateAppointmentComponent } from './features/appointments/components/update-appointment/update-appointment.component';
+import { MatCardModule } from '@angular/material/card';
+import { AppointmentFormComponent } from './features/shared/classes/appointment-form/appointment-form.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +31,8 @@ import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
     AppointmentDetailComponent,
     AppointmentCreateComponent,
     AppointmentManagementComponent,
+    UpdateAppointmentComponent,
+    AppointmentFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,6 +53,7 @@ import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
     MatDatetimepickerModule,
     MatMomentDatetimeModule,
     MatButtonModule,
+    MatCardModule,
   ],
   providers: [AppointmentService, provideAnimationsAsync()],
   bootstrap: [AppComponent],

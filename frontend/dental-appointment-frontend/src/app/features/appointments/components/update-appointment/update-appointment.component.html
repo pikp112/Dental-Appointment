@@ -1,0 +1,104 @@
+<h2 class="mat-headline">Update Appointment</h2>
+
+<form
+  [formGroup]="appointmentForm"
+  (ngSubmit)="updateAppointment()"
+  class="appointment-form"
+>
+  <mat-card>
+    <mat-card-content>
+      <!-- Non-editable Appointment Date & Time -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Appointment Date & Time</mat-label>
+        <input
+          matInput
+          formControlName="appointmentDateTime"
+          type="datetime-local"
+          required
+          readonly
+        />
+        <mat-error
+          *ngIf="
+            appointmentForm.get('appointmentDateTime').hasError('required')
+          "
+        >
+          Appointment date & time is required.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Editable New Appointment Date & Time with Datetime Picker -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>New appointment date & time</mat-label>
+        <mat-datetimepicker-toggle
+          [for]="newDatetimePicker"
+          matSuffix
+        ></mat-datetimepicker-toggle>
+        <mat-datetimepicker
+          #newDatetimePicker
+          type="datetime"
+          openOnFocus="true"
+        ></mat-datetimepicker>
+        <input
+          matInput
+          formControlName="newAppointmentDateTime"
+          required
+          [matDatetimepicker]="newDatetimePicker"
+        />
+        <mat-error
+          *ngIf="
+            appointmentForm.get('newAppointmentDateTime').errors?.weekend &&
+            appointmentForm.get('newAppointmentDateTime').touched
+          "
+        >
+          Appointments can only be scheduled from Monday to Friday.
+        </mat-error>
+        <mat-error
+          *ngIf="
+            appointmentForm.get('newAppointmentDateTime').errors
+              ?.outsideWorkingHours &&
+            appointmentForm.get('newAppointmentDateTime').touched
+          "
+        >
+          The appointment time must be between 09:00 and 17:30.
+        </mat-error>
+        <mat-error
+          *ngIf="
+            appointmentForm.get('newAppointmentDateTime').errors?.dateTooSoon &&
+            appointmentForm.get('newAppointmentDateTime').touched
+          "
+        >
+          The appointment date must be at least 1 hour from now.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Patient Name</mat-label>
+        <input matInput formControlName="patientName" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Patient Phone Number</mat-label>
+        <input matInput formControlName="patientPhoneNumber" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Notes</mat-label>
+        <textarea matInput formControlName="notes" rows="4"></textarea>
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="appointmentForm.invalid"
+      >
+        Update Appointment
+      </button>
+      <button mat-button (click)="router.navigate(['/manage-appointments'])">
+        Cancel
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

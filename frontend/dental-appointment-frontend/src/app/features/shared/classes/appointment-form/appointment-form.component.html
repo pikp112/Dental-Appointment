@@ -1,9 +1,16 @@
-<div class="appointment-create-container">
-  <h2>Create Appointment</h2>
+<div class="appointment-form-container">
+  <h1>{{ isEditMode ? "Update Appointment" : "Create Appointment" }}</h1>
+
   <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="fill">
       <mat-label>Patient Name</mat-label>
-      <input matInput id="patientName" formControlName="patientName" required />
+      <input
+        matInput
+        id="patientName"
+        formControlName="patientName"
+        required
+        placeholder="Enter your name"
+      />
       <mat-error
         *ngIf="
           appointmentForm.get('patientName').invalid &&
@@ -42,15 +49,11 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Notes</mat-label>
-      <textarea matInput id="notes" formControlName="notes"></textarea>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
       <mat-label>Appointment Date & Time</mat-label>
       <mat-datetimepicker-toggle
         [for]="datetimePicker"
         matSuffix
+        *ngIf="!isEditMode"
       ></mat-datetimepicker-toggle>
       <mat-datetimepicker
         #datetimePicker
@@ -62,6 +65,7 @@
         formControlName="appointmentDateTime"
         required
         [matDatetimepicker]="datetimePicker"
+        [readonly]="isEditMode"
       />
       <mat-error
         *ngIf="
@@ -90,23 +94,72 @@
       </mat-error>
     </mat-form-field>
 
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      [disabled]="appointmentForm.invalid"
-    >
-      Create Appointment
-    </button>
+    <mat-form-field appearance="fill" class="full-width" *ngIf="isEditMode">
+      <mat-label>New appointment date & time</mat-label>
+      <mat-datetimepicker-toggle
+        [for]="newDatetimePicker"
+        matSuffix
+      ></mat-datetimepicker-toggle>
+      <mat-datetimepicker
+        #newDatetimePicker
+        type="datetime"
+        openOnFocus="true"
+      ></mat-datetimepicker>
+      <input
+        matInput
+        formControlName="newAppointmentDateTime"
+        required
+        [matDatetimepicker]="newDatetimePicker"
+      />
+      <mat-error
+        *ngIf="
+          appointmentForm.get('newAppointmentDateTime').errors?.weekend &&
+          appointmentForm.get('newAppointmentDateTime').touched
+        "
+      >
+        Appointments can only be scheduled from Monday to Friday.
+      </mat-error>
+      <mat-error
+        *ngIf="
+          appointmentForm.get('newAppointmentDateTime').errors
+            ?.outsideWorkingHours &&
+          appointmentForm.get('newAppointmentDateTime').touched
+        "
+      >
+        The appointment time must be between 09:00 and 17:30.
+      </mat-error>
+      <mat-error
+        *ngIf="
+          appointmentForm.get('newAppointmentDateTime').errors?.dateTooSoon &&
+          appointmentForm.get('newAppointmentDateTime').touched
+        "
+      >
+        The appointment date must be at least 1 hour from now.
+      </mat-error>
+    </mat-form-field>
 
-    <button
-      mat-raised-button
-      class="clearBtn"
-      color="warn"
-      (click)="clear()"
-      type="reset"
-    >
-      Clear
-    </button>
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        id="notes"
+        formControlName="notes"
+        placeholder="Enter a description (optional)"
+      ></textarea>
+    </mat-form-field>
+
+    <div class="actions">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="appointmentForm.invalid"
+      >
+        {{ isEditMode ? "Update" : "Create" }}
+      </button>
+      <button mat-raised-button color="warn" routerLink="/appointments">
+        Cancel
+      </button>
+    </div>
   </form>
 </div>

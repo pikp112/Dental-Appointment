@@ -1,0 +1,115 @@
+<
+<div class="appointment-create-container">
+  <h2>Create Appointment</h2>
+  <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Patient Name</mat-label>
+      <input matInput id="patientName" formControlName="patientName" required />
+      <mat-error
+        *ngIf="
+          appointmentForm.get('patientName').invalid &&
+          appointmentForm.get('patientName').touched
+        "
+      >
+        Patient Name is required.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Patient Phone Number</mat-label>
+      <input
+        matInput
+        id="patientPhoneNumber"
+        formControlName="patientPhoneNumber"
+        required
+      />
+      <mat-error
+        *ngIf="
+          appointmentForm.get('patientPhoneNumber').invalid &&
+          appointmentForm.get('patientPhoneNumber').touched
+        "
+      >
+        Please enter a valid phone number.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Treatment Type</mat-label>
+      <mat-select id="treatmentType" formControlName="treatmentType">
+        <mat-option *ngFor="let type of treatmentTypes" [value]="type">
+          {{ type }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Notes</mat-label>
+      <textarea matInput id="notes" formControlName="notes"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Appointment Date & Time</mat-label>
+      <mat-datetimepicker-toggle
+        [for]="datetimePicker"
+        matSuffix
+      ></mat-datetimepicker-toggle>
+      <mat-datetimepicker
+        #datetimePicker
+        type="datetime"
+        openOnFocus="true"
+      ></mat-datetimepicker>
+      <input
+        matInput
+        formControlName="appointmentDateTime"
+        required
+        [matDatetimepicker]="datetimePicker"
+      />
+      <mat-error
+        *ngIf="
+          appointmentForm.get('appointmentDateTime').errors?.weekend &&
+          appointmentForm.get('appointmentDateTime').touched
+        "
+      >
+        Appointments can only be scheduled from Monday to Friday.
+      </mat-error>
+      <mat-error
+        *ngIf="
+          appointmentForm.get('appointmentDateTime').errors
+            ?.outsideWorkingHours &&
+          appointmentForm.get('appointmentDateTime').touched
+        "
+      >
+        The appointment time must be between 09:00 and 17:30.
+      </mat-error>
+      <mat-error
+        *ngIf="
+          appointmentForm.get('appointmentDateTime').errors?.dateTooSoon &&
+          appointmentForm.get('appointmentDateTime').touched
+        "
+      >
+        The appointment date must be at least 1 hour from now.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-card-actions>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="appointmentForm.invalid"
+      >
+        Create Appointment
+      </button>
+
+      <button
+        mat-raised-button
+        class="clearBtn"
+        color="warn"
+        (click)="clear()"
+        type="reset"
+      >
+        Clear
+      </button>
+    </mat-card-actions>
+  </form>
+</div>

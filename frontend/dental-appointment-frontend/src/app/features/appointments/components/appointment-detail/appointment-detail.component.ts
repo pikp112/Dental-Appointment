@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Appointment } from '../../../../shared/models/appointment.model';
 import { ActivatedRoute } from '@angular/router';
-import { AppointmentService } from '../../../../../core/services/appointment.service';
-import { MapTreatmentType } from '../../../../shared/enums/treatment-type.enum';
+import { AppointmentService } from '../../../../core/services/appointment.service';
+import { MapTreatmentType } from '../../../shared/enums/treatment-type.enum';
+import { Appointment } from '../../../shared/models/appointment.model';
 
 @Component({
   selector: 'app-appointment-detail',

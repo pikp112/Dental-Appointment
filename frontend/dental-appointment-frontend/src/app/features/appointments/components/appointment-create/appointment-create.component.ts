@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AppointmentService } from '../../../../../core/services/appointment.service';
-import { TreatmentType } from '../../../../shared/enums/treatment-type.enum';
-import { CreateAppointmentCommand } from '../../../../shared/models/create-appointment-command.model';
 import { Guid } from 'guid-typescript';
-import { appointmentDateTimeValidator } from '../../../../../core/validators/appointment-date-time.validator';
+import { AppointmentService } from '../../../../core/services/appointment.service';
+import { appointmentDateTimeValidator } from '../../../../core/validators/appointment-date-time.validator';
+import { TreatmentType } from '../../../shared/enums/treatment-type.enum';
+import { CreateAppointmentCommand } from '../../../shared/models/create-appointment-command.model';
 
 @Component({
   selector: 'app-appointment-create',
@@ -19,7 +19,7 @@ export class AppointmentCreateComponent {
   constructor(
     private fb: FormBuilder,
     private appointmentService: AppointmentService,
-    private snackBar: MatSnackBar // Injectați MatSnackBar
+    private snackBar: MatSnackBar
   ) {
     this.appointmentForm = this.fb.group({
       patientName: ['', Validators.required],
