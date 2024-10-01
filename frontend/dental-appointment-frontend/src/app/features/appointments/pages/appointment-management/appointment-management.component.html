@@ -12,45 +12,60 @@
   </button>
 </mat-toolbar>
 
-<mat-table [dataSource]="appointments" class="mat-elevation-z8">
-  <ng-container matColumnDef="id">
-    <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-    <mat-cell *matCellDef="let appointment"> {{ appointment.id }} </mat-cell>
+<mat-table [dataSource]="appointments" matSort class="mat-elevation-z8">
+  <ng-container matColumnDef="number">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
+    <mat-cell *matCellDef="let appointment">
+      {{ appointment.rowNumber }}
+    </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="appointmentDateTime">
-    <mat-header-cell *matHeaderCellDef> Date & Time </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      Date & Time
+    </mat-header-cell>
     <mat-cell *matCellDef="let appointment">
-      {{ appointment.appointmentDateTime | date : "short" }}
+      {{ appointment.appointmentDateTime | romaniaDate }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="patientName">
-    <mat-header-cell *matHeaderCellDef> Patient Name </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      Patient Name
+    </mat-header-cell>
     <mat-cell *matCellDef="let appointment">
       {{ appointment.patientName }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="patientPhoneNumber">
-    <mat-header-cell *matHeaderCellDef> Phone Number </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      Phone Number
+    </mat-header-cell>
     <mat-cell *matCellDef="let appointment">
       {{ appointment.patientPhoneNumber }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="treatmentType">
-    <mat-header-cell *matHeaderCellDef> Treatment Type </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      Treatment Type
+    </mat-header-cell>
     <mat-cell *matCellDef="let appointment">
       {{ getTreatmentTypeName(appointment.treatmentType) }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="status">
-    <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      Status
+    </mat-header-cell>
     <mat-cell *matCellDef="let appointment">
       <span *ngIf="appointment.isConfirmed">Confirmed</span>
       <span *ngIf="appointment.isRejected">Rejected</span>
+      <span *ngIf="!appointment.isConfirmed && !appointment.isRejected"
+        >On Hold</span
+      >
     </mat-cell>
   </ng-container>
 
@@ -82,3 +97,10 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 </mat-table>
+
+<mat-paginator
+  [pageSizeOptions]="[5, 10, 20]"
+  showFirstLastButtons
+  aria-label="Select page of periodic elements"
+>
+</mat-paginator>

@@ -22,12 +22,12 @@ export class UpdateAppointmentComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.appointmentForm = this.fb.group({
-      appointmentDateTime: [
+      appointmentDateTime: ['', Validators.required],
+      newAppointmentDateTime: [
         '',
         Validators.required,
         appointmentDateTimeValidator(),
       ],
-      newAppointmentDateTime: [''],
       patientName: [''],
       patientPhoneNumber: [''],
       isConfirmed: [''],
@@ -46,7 +46,7 @@ export class UpdateAppointmentComponent implements OnInit {
 
   loadAppointment(id: string): void {
     this.appointmentService.getAppointmentById(id).subscribe((appointment) => {
-      this.appointmentForm.patchValue(appointment); // Populate the form with fetched data
+      this.appointmentForm.patchValue(appointment);
     });
   }
 

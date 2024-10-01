@@ -3,7 +3,7 @@
   <p><strong>ID:</strong> {{ appointment.id }}</p>
   <p>
     <strong>Date & Time:</strong>
-    {{ appointment.appointmentDateTime | date : "short" }}
+    {{ appointment.appointmentDateTime | romaniaDate }}
   </p>
   <p><strong>Patient Name:</strong> {{ appointment.patientName }}</p>
   <p><strong>Phone Number:</strong> {{ appointment.patientPhoneNumber }}</p>

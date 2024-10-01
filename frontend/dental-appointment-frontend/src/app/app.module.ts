@@ -17,13 +17,19 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppointmentManagementComponent } from './features/appointments/pages/appointment-management/appointment-management.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
+import {
+  MAT_DATETIME_FORMATS,
+  MatDatetimepickerModule,
+} from '@mat-datetimepicker/core';
 import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
 import { AppointmentDetailComponent } from './features/appointments/components/appointment-detail/appointment-detail.component';
 import { AppointmentCreateComponent } from './features/appointments/components/appointment-create/appointment-create.component';
 import { UpdateAppointmentComponent } from './features/appointments/components/update-appointment/update-appointment.component';
 import { MatCardModule } from '@angular/material/card';
 import { AppointmentFormComponent } from './features/shared/classes/appointment-form/appointment-form.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { RomaniaDatePipe } from './core/pipes/romania-date.pipe';
 
 @NgModule({
   declarations: [
@@ -33,6 +39,7 @@ import { AppointmentFormComponent } from './features/shared/classes/appointment-
     AppointmentManagementComponent,
     UpdateAppointmentComponent,
     AppointmentFormComponent,
+    RomaniaDatePipe,
   ],
   imports: [
     BrowserModule,
@@ -54,7 +61,10 @@ import { AppointmentFormComponent } from './features/shared/classes/appointment-
     MatMomentDatetimeModule,
     MatButtonModule,
     MatCardModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
+  exports: [RomaniaDatePipe],
   providers: [AppointmentService, provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })

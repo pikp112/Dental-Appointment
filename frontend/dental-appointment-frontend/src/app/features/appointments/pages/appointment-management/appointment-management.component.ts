@@ -1,21 +1,31 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppointmentService } from '../../../../core/services/appointment.service';
 import { MapTreatmentType } from '../../../shared/enums/treatment-type.enum';
 import { Appointment } from '../../../shared/models/appointment.model';
 import { DeleteAppointmentCommand } from '../../../shared/models/delete-appointment.command.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-appointment-management',
   templateUrl: './appointment-management.component.html',
   styleUrl: './appointment-management.component.css',
 })
-export class AppointmentManagementComponent implements OnInit {
-  appointments: Appointment[] = [];
+export class AppointmentManagementComponent implements OnInit, AfterViewInit {
+  appointments: MatTableDataSource<Appointment> =
+    new MatTableDataSource<Appointment>();
   private appointmentService = inject(AppointmentService);
   private snackBar = inject(MatSnackBar);
   displayedColumns: string[] = [
-    'id',
+    'number',
     'appointmentDateTime',
     'patientName',
     'patientPhoneNumber',
@@ -23,14 +33,28 @@ export class AppointmentManagementComponent implements OnInit {
     'status',
     'actions',
   ];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
     this.loadAppointments();
   }
+  ngAfterViewInit() {
+    this.appointments.paginator = this.paginator;
+    this.appointments.sort = this.sort;
+  }
 
   loadAppointments(): void {
     this.appointmentService.getAllAppointments().subscribe((data) => {
-      this.appointments = data;
+      const appointmentsWithRowNumber = data.map((appointment, index) => ({
+        ...appointment,
+        rowNumber: index + 1,
+      }));
+
+      this.appointments = new MatTableDataSource(appointmentsWithRowNumber);
+
+      this.appointments.paginator = this.paginator;
+      this.appointments.sort = this.sort;
     });
   }
 
@@ -57,4 +81,10 @@ export class AppointmentManagementComponent implements OnInit {
       }
     );
   }
+
+  // getAppointmentNumber(index: number): number {
+  //   return this.paginator
+  //     ? index + 1 + this.paginator.pageIndex * this.paginator.pageSize
+  //     : index + 1;
+  // }
 }

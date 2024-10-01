@@ -1,11 +1,37 @@
-.mat-toolbar {
+.mat-header-row,
+.mat-row {
+  display: flex;
+  justify-content: center;
+}
+
+.mat-header-cell,
+.mat-cell {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  padding: 8px;
+  white-space: nowrap;
 }
 
-.spacer {
-  flex: 1;
+.mat-cell {
+  justify-content: space-around;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.mat-header-cell {
+  font-weight: bold;
+}
+
+.mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
 }
 
 .refresh-btn {
