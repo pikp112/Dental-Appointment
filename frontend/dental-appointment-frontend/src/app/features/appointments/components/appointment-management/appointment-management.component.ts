@@ -20,7 +20,9 @@ import { MatSort } from '@angular/material/sort';
   styleUrl: './appointment-management.component.css',
 })
 export class AppointmentManagementComponent implements OnInit, AfterViewInit {
-  appointments: MatTableDataSource<Appointment> =
+  validAppointments: MatTableDataSource<Appointment> =
+    new MatTableDataSource<Appointment>();
+  invalidAppointments: MatTableDataSource<Appointment> =
     new MatTableDataSource<Appointment>();
   private appointmentService = inject(AppointmentService);
   private snackBar = inject(MatSnackBar);
@@ -33,28 +35,56 @@ export class AppointmentManagementComponent implements OnInit, AfterViewInit {
     'status',
     'actions',
   ];
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('validPaginator') validPaginator: MatPaginator;
+  @ViewChild('invalidPaginator') invalidPaginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
+    console.log('AppointmentManagementComponent initialized');
     this.loadAppointments();
   }
   ngAfterViewInit() {
-    this.appointments.paginator = this.paginator;
-    this.appointments.sort = this.sort;
+    console.log('AppointmentManagementComponent view initialized');
+    this.validAppointments.paginator = this.validPaginator;
+    this.invalidAppointments.paginator = this.invalidPaginator;
   }
 
   loadAppointments(): void {
     this.appointmentService.getAllAppointments().subscribe((data) => {
+      const currentDate = new Date();
+
       const appointmentsWithRowNumber = data.map((appointment, index) => ({
         ...appointment,
         rowNumber: index + 1,
       }));
 
-      this.appointments = new MatTableDataSource(appointmentsWithRowNumber);
+      const valid = appointmentsWithRowNumber.filter(
+        (appointment) =>
+          new Date(appointment.appointmentDateTime) >
+          new Date(currentDate.getTime() + 60 * 60 * 1000)
+      );
 
-      this.appointments.paginator = this.paginator;
-      this.appointments.sort = this.sort;
+      const invalid = appointmentsWithRowNumber.filter(
+        (appointment) =>
+          new Date(appointment.appointmentDateTime) <=
+          new Date(currentDate.getTime() + 60 * 60 * 1000)
+      );
+
+      this.validAppointments = new MatTableDataSource(
+        valid.map((appointment, index) => ({
+          ...appointment,
+          rowNumber: index + 1,
+        }))
+      );
+      this.invalidAppointments = new MatTableDataSource(
+        invalid.map((appointment, index) => ({
+          ...appointment,
+          rowNumber: index + 1,
+        }))
+      );
+
+      this.validAppointments.paginator = this.validPaginator;
+      this.invalidAppointments.paginator = this.invalidPaginator;
     });
   }
 

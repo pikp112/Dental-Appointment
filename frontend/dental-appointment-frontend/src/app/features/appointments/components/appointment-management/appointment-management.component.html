@@ -1,0 +1,27 @@
+<mat-toolbar>
+  <span class="spacer"></span>
+  <span>Appointments</span>
+  <span class="spacer"></span>
+  <button
+    mat-raised-button
+    color="primary"
+    class="refresh-btn"
+    (click)="loadAppointments()"
+  >
+    Refresh
+  </button>
+</mat-toolbar>
+
+<h2 class="table-title">Valid Appointments</h2>
+<app-appointment-table
+  [appointments]="validAppointments"
+  [displayedColumns]="displayedColumns"
+  (deleteAppointment)="deleteAppointment($event)"
+></app-appointment-table>
+
+<h2 class="table-title">Invalid Appointments</h2>
+<app-appointment-table
+  [appointments]="invalidAppointments"
+  [displayedColumns]="displayedColumns"
+  (deleteAppointment)="deleteAppointment($event)"
+></app-appointment-table>

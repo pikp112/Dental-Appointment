@@ -1,0 +1,47 @@
+.mat-header-row,
+.mat-row {
+  display: flex;
+  justify-content: center;
+}
+
+.mat-header-cell,
+.mat-cell {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 8px;
+  white-space: nowrap;
+}
+
+.mat-cell {
+  justify-content: space-around;
+}
+
+.mat-table {
+  width: 100%;
+  border-collapse: collapse; /* Asigură că nu există spații între celule */
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  background-color: #1976d2; /* Culoare de fundal pentru capul de tabel */
+  color: white; /* Culoare text pentru capul de tabel */
+  border-bottom: 2px solid #0d47a1; /* Linia de separare de sub capul de tabel */
+}
+
+.mat-row:hover {
+  background-color: #f5f5f5; /* Schimbă culoarea fundalului la hover */
+}
+
+.mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.refresh-btn {
+  margin-left: auto;
+}

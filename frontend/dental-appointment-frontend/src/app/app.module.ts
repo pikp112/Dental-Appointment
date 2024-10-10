@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { AppointmentManagementComponent } from './features/appointments/pages/appointment-management/appointment-management.component';
+import { AppointmentManagementComponent } from './features/appointments/components/appointment-management/appointment-management.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
   MAT_DATETIME_FORMATS,
@@ -30,6 +30,7 @@ import { AppointmentFormComponent } from './features/shared/classes/appointment-
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { RomaniaDatePipe } from './core/pipes/romania-date.pipe';
+import { AppointmentTableComponent } from './features/appointments/appointment-table/appointment-table.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { RomaniaDatePipe } from './core/pipes/romania-date.pipe';
     UpdateAppointmentComponent,
     AppointmentFormComponent,
     RomaniaDatePipe,
+    AppointmentTableComponent,
   ],
   imports: [
     BrowserModule,

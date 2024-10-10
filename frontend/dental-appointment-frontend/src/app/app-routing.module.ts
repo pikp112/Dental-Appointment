@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AppointmentManagementComponent } from './features/appointments/pages/appointment-management/appointment-management.component';
+import { AppointmentManagementComponent } from './features/appointments/components/appointment-management/appointment-management.component';
 import { AppointmentCreateComponent } from './features/appointments/components/appointment-create/appointment-create.component';
 import { AppointmentDetailComponent } from './features/appointments/components/appointment-detail/appointment-detail.component';
 import { UpdateAppointmentComponent } from './features/appointments/components/update-appointment/update-appointment.component';
