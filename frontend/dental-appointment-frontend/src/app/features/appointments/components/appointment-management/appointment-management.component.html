@@ -15,13 +15,11 @@
 <h2 class="table-title">Valid Appointments</h2>
 <app-appointment-table
   [appointments]="validAppointments"
-  [displayedColumns]="displayedColumns"
   (deleteAppointment)="deleteAppointment($event)"
 ></app-appointment-table>
 
 <h2 class="table-title">Invalid Appointments</h2>
 <app-appointment-table
   [appointments]="invalidAppointments"
-  [displayedColumns]="displayedColumns"
   (deleteAppointment)="deleteAppointment($event)"
 ></app-appointment-table>

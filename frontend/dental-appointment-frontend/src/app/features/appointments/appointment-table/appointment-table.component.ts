@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MapTreatmentType } from '../../shared/enums/treatment-type.enum';
@@ -12,7 +19,17 @@ import { Appointment } from '../../shared/models/appointment.model';
 export class AppointmentTableComponent implements OnInit {
   @Input() appointments: MatTableDataSource<Appointment> =
     new MatTableDataSource<Appointment>();
-  @Input() displayedColumns: string[] = [];
+  @Output() deleteAppointment = new EventEmitter<Date>();
+
+  displayedColumns: string[] = [
+    'number',
+    'appointmentDateTime',
+    'patientName',
+    'patientPhoneNumber',
+    'treatmentType',
+    'status',
+    'actions',
+  ];
 
   dataSource: MatTableDataSource<Appointment> =
     new MatTableDataSource<Appointment>();
@@ -32,5 +49,9 @@ export class AppointmentTableComponent implements OnInit {
 
   getTreatmentTypeName(treatmentTypeIndex: number): string {
     return MapTreatmentType[treatmentTypeIndex];
+  }
+
+  onDelete(appointmentDateTime: Date): void {
+    this.deleteAppointment.emit(appointmentDateTime);
   }
 }

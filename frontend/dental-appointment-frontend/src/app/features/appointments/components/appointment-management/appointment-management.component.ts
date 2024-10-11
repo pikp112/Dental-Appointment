@@ -26,15 +26,7 @@ export class AppointmentManagementComponent implements OnInit, AfterViewInit {
     new MatTableDataSource<Appointment>();
   private appointmentService = inject(AppointmentService);
   private snackBar = inject(MatSnackBar);
-  displayedColumns: string[] = [
-    'number',
-    'appointmentDateTime',
-    'patientName',
-    'patientPhoneNumber',
-    'treatmentType',
-    'status',
-    'actions',
-  ];
+
   @ViewChild('validPaginator') validPaginator: MatPaginator;
   @ViewChild('invalidPaginator') invalidPaginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
